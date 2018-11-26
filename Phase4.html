@@ -1,0 +1,481 @@
+
+<!--VERSION 2 WITH CSS, introduction to responsive design, resize per device, then attempt interactive links (enabled)
+WILL ALSO load detailPage.html, with url param handling built in
+grab a set of images, using an array, for-iteration, then style them using css,
+move to second page using url parameters, non jq
+use non jq method to pass url parameters
+width of div, https://css-tricks.com/almanac/properties/w/width/
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Bootstrap Example</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<style>
+
+  html {
+    position: relative;
+    min-height: 100%;
+  }
+  body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+  }
+  .footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    line-height: 60px; /* Vertically center the text there */
+    background-color: #f5f5f5;
+  }
+
+.jumbotron {
+      background-color: #f2f2f2; /* white */
+      color: #666666;
+  }
+
+  .footer-margin {
+  height: 100px;
+}
+
+  .navbar {
+    overflow: hidden;
+    background-color: #333;
+    font-family: Arial;
+  }
+
+  .navbar a {
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+
+  .dropdown {
+    float: left;
+    overflow: hidden;
+  }
+
+  .dropdown .dropbtn {
+    font-size: 16px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit; /* Important for vertical align on mobile phones */
+    margin: 0; /* Important for vertical align on mobile phones */
+  }
+
+  .navbar a:hover, .dropdown:hover .dropbtn {
+    background-color: red;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+
+  .dropdown-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+  }
+
+  .dropdown-content a:hover {
+    background-color: gray;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+  .pctImg{
+  width: 100%;
+  height: auto;
+  }
+
+  .imgDiv{
+    width:30%
+    height:300px;
+    padding:5px;
+  }
+
+  .caption{
+  	text-align: center;
+  }
+
+  .btn-group	{
+    text-align: center;
+    background-color:#3399ff;
+    color: #FFF;
+
+
+  }
+
+  .star{
+    width:30px;
+    height:30px;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .containMe{
+    display: grid;
+    grid-gap: 3px;
+    grid-template-columns: 33% 33% 33%;
+  }
+
+  .box{
+    background-color: #17202A;
+    color: #D6DBDF;
+    border-radius: 3px; //adjust
+    padding: 20px;
+    font-size: 90%; //adjust
+    margin: 3px;
+    border: 3px;
+  }
+
+
+
+</style>
+</head>
+
+<body onload="checkCookie()">
+
+<!-- navbar -->
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Snowology</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="#">Aaron</a></li>
+        <li><a href="#">Minh</a></li>
+        <li><a href="#">Mathew</a></li>
+        <li><a href="#">James</a></li>
+      </ul>
+    </div>
+  </nav>
+<!-- Continer with jumpbotron -->
+  <div class="jumbotron text-center">
+    <h1>Welcome to Snowlogy</h1>
+    <p>Here you'll find how to do different techniques for Snowboarding</p>
+  </div>
+
+<!-- Continer -->
+<div class="containMe" id="grid">
+</div>
+
+<!-- Foooter -->
+<footer class="footer">
+     <div class="container">
+       <span class="text-muted">Footer</span>
+     </div>
+   </footer>
+
+<!-- Script -->
+<script src="https://code.jquery.com/jquery-1.12.4.js"> </script>
+<script>
+ var images = ["S1.jpg", "S2.jpg", "S3.jpg", "S4.jpg", "S5.jpg", "S6.jpg"]; //your urls
+ var caption = ["Snowboarding", "Carving", "Sliding", "Heel Side", "Ollie", "Classic Board" ];
+ var description = ["Sport in the Snow during Winter", ";Basic fundamental of Snowboarding", "Sliding down the mountain is the best part of Snowboarding", "Heel side is important to learn as well as toe side", "Ollie is a tricks", "Best snowboard gear"]
+
+ var url;
+ var urlOfDetailPage;
+ var cookieUrl;
+
+ var star = document.createElement("img");
+ var starUrl = "https://s3-us-west-2.amazonaws.com/joshcis311/phase3/like.png";
+ star.setAttribute("class", "star");
+ star.setAttribute("src", starUrl);
+
+
+ var url0;
+ var url1;
+ var url2;
+ var url3;
+ var url4;
+ var url5;
+
+ //console.log(images);
+
+ for(var i=0; i < images.length; i++) //establish for, 6 items, last index place is 5, if you recall
+ {
+   console.log("image in iteration is " + images[i]);
+   url = "https://s3-us-west-2.amazonaws.com/joshcis311/Phase2_Project/" + images[i]; //append to https://s3-us-west-2.amazonaws.com/newbucket3110fall18/phase2/
+   urlOfDetailPage = "Phase4DP.html?" + "img=" + url + "&" + "caption=" + caption[i] + "&" + "description=" + description[i]; //where you will navigate, once you press the image, will send the detail page the img to analyze
+//https://github.com/stefanbund/311/blob/16b1bb98a9f3c7a10663c2a4f87651bbf3508e17/prior%20terms/spring%202018%20materials/unit%202%20URL%20parameters/urlOrigin.html#L31   var imgDiv = document.createElement("div"); //divs to house img
+
+   var grid = document.getElementById("grid");
+   var imgDiv = document.createElement("div"); //make a div
+   var box = document.createElement("div");
+   box.setAttribute("class", "box");
+   imgDiv.setAttribute("class", "imgDiv"); //so it displays at 30% width, margin and padding https://css-tricks.com/almanac/properties/o/object-fit/
+
+   var imgInDiv = document.createElement("img");
+   imgInDiv.setAttribute("class", "pctImg"); //fit to div
+   imgInDiv.setAttribute("id", "img" + i);
+   imgInDiv.setAttribute("src", url); //src to url, above, determined by for i
+
+   var link = document.createElement("a");
+   link.setAttribute("href", urlOfDetailPage); // so you'll navigate to the url
+   link.appendChild(imgInDiv); //make the image the link
+   imgDiv.appendChild(link);//place the link inside of each div
+
+   var showCaption = caption[i];
+   var node = document.createTextNode(showCaption);
+   var hCaption = document.createElement("h3");
+   var captionDiv = document.createElement("div");
+   captionDiv.setAttribute ("class", "captionCSS");
+	 hCaption.appendChild(node);
+	 captionDiv.appendChild(hCaption);
+
+   var favButton = document.createElement("button");
+   favButton.setAttribute("type", "button");
+   favButton.setAttribute("class", "buttons");
+   favButton.setAttribute("id","btnFav" + i);
+   var favNode = document.createTextNode("Favorite");
+   favButton.appendChild(favNode);
+
+   var unfavButton = document.createElement("button");
+   unfavButton.setAttribute("type", "button");
+   unfavButton.setAttribute("class", "buttons");
+   unfavButton.setAttribute("id","btnUnfav" + i);
+   var unfavNode = document.createTextNode("Unfavorite");
+   unfavButton.appendChild(unfavNode);
+
+
+	 box.appendChild(captionDiv);
+   box.appendChild(imgDiv);//then appd to body, document.body.appendChild
+   box.appendChild(hCaption)
+   box.appendChild(favButton);
+   box.appendChild(unfavButton);
+   grid.appendChild(box);
+
+
+
+ }
+
+ $(document).ready(function(){
+
+
+    $("#btnFav0").click(function(){
+      $("#btnFav0").hide();
+      btnFav0.parentNode.appendChild(star);
+      cookieUrl = document.getElementById("img0").src;
+      setCookie("url", cookieUrl, 30);
+      console.log("cookie url = " + cookieUrl);
+      url0 = document.getElementById("a0").href;
+      var urlOfDetailPageFav = url0 + "&fav=on";
+      console.log("url of fav detail page = " + urlOfDetailPageFav);
+      $('#a0').attr("href", urlOfDetailPageFav);
+    });
+
+    $("#btnUnfav0").click(function(){
+      $("#btnFav0").show();
+      star.remove(star);
+      cookieUrl = "";
+      setCookie("url", cookieUrl, 30);
+      console.log("cookie url = " + cookieUrl);
+      $('#a0').attr("href", url0);
+    });
+
+    $("#btnFav1").click(function(){
+      $("#btnFav1").hide();
+      btnFav1.parentNode.appendChild(star);
+      cookieUrl = document.getElementById("img1").src;
+      setCookie("url", cookieUrl, 30);
+      console.log("cookie url = " + cookieUrl);
+      url1 = document.getElementById("a1").href;
+      var urlOfDetailPageFav = url1 + "&fav=on";
+      console.log("url of fav detail page = " + urlOfDetailPageFav);
+      $('#a1').attr("href", urlOfDetailPageFav);
+    });
+
+    $("#btnUnfav1").click(function(){
+      $("#btnFav1").show();
+      star.remove(star);
+      cookieUrl = "";
+      setCookie("url", cookieUrl, 30);
+      console.log("cookie url = " + cookieUrl);
+      $('#a1').attr("href", url1);
+    });
+
+    $("#btnFav2").click(function(){
+      $("#btnFav2").hide();
+      btnFav2.parentNode.appendChild(star);
+      cookieUrl = document.getElementById("img2").src;
+      setCookie("url", cookieUrl, 30);
+      console.log("cookie url = " + cookieUrl);
+      url2 = document.getElementById("a2").href;
+      var urlOfDetailPageFav = url2 + "&fav=on";
+      console.log("url of fav detail page = " + urlOfDetailPageFav);
+      $('#a2').attr("href", urlOfDetailPageFav);
+    });
+
+    $("#btnUnfav2").click(function(){
+      $("#btnFav2").show();
+      star.remove(star);
+      cookieUrl = "";
+      setCookie("url", cookieUrl, 30);
+      console.log("cookie url = " + cookieUrl);
+      $('#a2').attr("href", url2);
+    });
+
+    $("#btnFav3").click(function(){
+      $("#btnFav3").hide();
+      btnFav3.parentNode.appendChild(star);
+      cookieUrl = document.getElementById("img3").src;
+      setCookie("url", cookieUrl, 30);
+      console.log("cookie url = " + cookieUrl);
+      url3 = document.getElementById("a3").href;
+      var urlOfDetailPageFav = url3 + "&fav=on";
+      console.log("url of fav detail page = " + urlOfDetailPageFav);
+      $('#a3').attr("href", urlOfDetailPageFav);
+    });
+
+    $("#btnUnfav3").click(function(){
+      $("#btnFav3").show();
+      star.remove(star);
+      cookieUrl = "";
+      setCookie("url", cookieUrl, 30);
+      console.log("cookie url = " + cookieUrl);
+      $('#a3').attr("href", url3);
+    });
+
+    $("#btnFav4").click(function(){
+      $("#btnFav4").hide();
+      btnFav4.parentNode.appendChild(star);
+      cookieUrl = document.getElementById("img4").src;
+      setCookie("url", cookieUrl, 30);
+      console.log("cookie url = " + cookieUrl);
+      url4 = document.getElementById("a4").href;
+      var urlOfDetailPageFav = url4 + "&fav=on";
+      console.log("url of fav detail page = " + urlOfDetailPageFav);
+      $('#a4').attr("href", urlOfDetailPageFav);
+    });
+
+    $("#btnUnfav4").click(function(){
+      $("#btnFav4").show();
+      star.remove(star);
+      cookieUrl = "";
+      setCookie("url", cookieUrl, 30);
+      console.log("cookie url = " + cookieUrl);
+      $('#a4').attr("href", url4);
+    });
+
+    $("#btnFav5").click(function(){
+      $("#btnFav5").hide();
+      btnFav5.parentNode.appendChild(star);
+      cookieUrl = document.getElementById("img5").src;
+      setCookie("url", cookieUrl, 30);
+      console.log("cookie url = " + cookieUrl);
+      url5 = document.getElementById("a5").href;
+      var urlOfDetailPageFav = url5 + "&fav=on";
+      console.log("url of fav detail page = " + urlOfDetailPageFav);
+      $('#a5').attr("href", urlOfDetailPageFav);
+    });
+
+    $("#btnUnfav5").click(function(){
+      $("#btnFav5").show();
+      star.remove(star);
+      cookieUrl = "";
+      setCookie("url", cookieUrl, 30);
+      console.log("cookie url = " + cookieUrl);
+      $('#a5').attr("href", url5);
+    });
+  });
+
+  function setCookie(cname, cvalue, exdays) {
+
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires=" + d.toGMTString();
+    //console.log("expires in " + expires);
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+    console.log("cookie is " + document.cookie);
+  }
+
+  function getCookie(cname) {
+      var name = cname + "=";
+      var ca = document.cookie.split(';');
+      for(var i=0; i<ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0)==' ') c = c.substring(1);
+          if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+          }
+      }
+      return "";
+  }
+
+  function checkCookie() {
+      var c = document.cookie;
+      console.log("cookie checker is " + c);
+      if (c != "") {
+          if (c == "url=https://s3-us-west-2.amazonaws.com/joshcis311/Phase2_Project/S1.jpg"){
+            var btn = document.getElementById("btnFav0");
+            $("#btnFav0").hide();
+            btnFav0.parentNode.appendChild(star);
+            url0 = document.getElementById("a0").href;
+        var urlOfDetailPageFav = url0 + "&fav=on";
+        $('#a0').attr("href", urlOfDetailPageFav);
+      } else if (c == "url=https://s3-us-west-2.amazonaws.com/joshcis311/Phase2_Project/S2.jpg"){
+            var btn = document.getElementById("btnFav1");
+            $("#btnFav1").hide();
+            btnFav1.parentNode.appendChild(star);
+            url1 = document.getElementById("a1").href;
+        var urlOfDetailPageFav = url1 + "&fav=on";
+        $('#a1').attr("href", urlOfDetailPageFav);
+      } else if (c == "url=https://s3-us-west-2.amazonaws.com/joshcis311/Phase2_Project/S3.jpg"){
+            var btn = document.getElementById("btnFav2");
+            $("#btnFav2").hide();
+            btnFav2.parentNode.appendChild(star);
+            url2 = document.getElementById("a2").href;
+        var urlOfDetailPageFav = url2 + "&fav=on";
+        $('#a2').attr("href", urlOfDetailPageFav);
+      } else if (c == "url=https://s3-us-west-2.amazonaws.com/joshcis311/Phase2_Project/S4.jpg"){
+            var btn = document.getElementById("btnFav3");
+            $("#btnFav3").hide();
+            btnFav3.parentNode.appendChild(star);
+            url3 = document.getElementById("a3").href;
+        var urlOfDetailPageFav = url3 + "&fav=on";
+        $('#a3').attr("href", urlOfDetailPageFav);
+      } else if (c == "url=https://s3-us-west-2.amazonaws.com/joshcis311/Phase2_Project/S5.jpg"){
+            var btn = document.getElementById("btnFav0");
+            $("#btnFav4").hide();
+            btnFav4.parentNode.appendChild(star);
+            url4 = document.getElementById("a4").href;
+        var urlOfDetailPageFav = url4 + "&fav=on";
+        $('#a4').attr("href", urlOfDetailPageFav);
+      } else if (c == "url=https://s3-us-west-2.amazonaws.com/joshcis311/Phase2_Project/S6.jpg"){
+            var btn = document.getElementById("btnFav5");
+            $("#btnFav5").hide();
+            btnFav5.parentNode.appendChild(star);
+            url5 = document.getElementById("a5").href;
+        var urlOfDetailPageFav = url5 + "&fav=on";
+        $('#a5').attr("href", urlOfDetailPageFav);
+          }
+      }
+    }
+</script>
+</body>
+</html>
